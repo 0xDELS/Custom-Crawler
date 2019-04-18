@@ -11,8 +11,10 @@ class Spider:
     domain_name = ''
     queue_file = ''
     crawled_file = ''
+    agencies_file = ''
     queue = set()
     crawled = set()
+    agencies = set()
 
     def __init__(self, project_name, base_url, domain_name):
         Spider.project_name = project_name
@@ -20,6 +22,7 @@ class Spider:
         Spider.domain_name = domain_name
         Spider.queue_file = Spider.project_name + '/queue.txt'
         Spider.crawled_file = Spider.project_name + '/crawled.txt'
+        Spider.agencies_file = Spider.project_name + '/agencies.txt'
         self.boot()
         self.crawl_page('First spider', Spider.base_url)
 
@@ -30,6 +33,7 @@ class Spider:
         create_data_files(Spider.project_name, Spider.base_url)
         Spider.queue = file_to_set(Spider.queue_file)
         Spider.crawled = file_to_set(Spider.crawled_file)
+        Spider.agencies = file_to_set(Spider.agencies_file)
 
     # Updates user display, fills queue and updates files
     @staticmethod
@@ -65,10 +69,12 @@ class Spider:
             if (url in Spider.queue) or (url in Spider.crawled):
                 continue
             if Spider.domain_name != get_domain_name(url):
-                continue
-            Spider.queue.add(url)
+                Spider.agencies.add(url)
+            else:
+                Spider.queue.add(url)
 
     @staticmethod
     def update_files():
         set_to_file(Spider.queue, Spider.queue_file)
         set_to_file(Spider.crawled, Spider.crawled_file)
+        set_to_file(Spider.agencies, Spider.agencies_file)
