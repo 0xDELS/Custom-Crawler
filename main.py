@@ -1,4 +1,5 @@
 import threading
+import time
 from queue import Queue
 from spider import Spider
 from domain import *
@@ -34,7 +35,9 @@ def work():
 def create_jobs():
     for link in file_to_set(QUEUE_FILE):
         queue.put(link)
+        time.sleep(1)
     queue.join()
+    time.sleep(1)
     crawl()
 
 
@@ -48,3 +51,4 @@ def crawl():
 
 create_workers()
 crawl()
+time.sleep(1)
